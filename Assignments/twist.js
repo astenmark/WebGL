@@ -52,18 +52,38 @@ function init()
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    document.getElementById("numsteps").onchange = function(target) {
-        numTimesToSubdivide = parseInt(event.target.value);
+    document.getElementById("numsteps").onchange = function(event) {
+        var event = event || window.event; // for IE
+        var target = event.target || event.srcElement;
+        numTimesToSubdivide = parseInt(target.value);
         render();
     };
 
-    document.getElementById("angle").onchange = function(target) {
-        angle = parseInt(event.target.value) / 10;
+    document.getElementById("numsteps").oninput = function(event) {
+        var event = event || window.event; // for IE
+        var target = event.target || event.srcElement;
+        numTimesToSubdivide = parseInt(target.value);
         render();
     };
 
-    document.getElementById("filled").onchange = function(target) {
-        filled = event.target.checked;
+    document.getElementById("angle").onchange = function(event) {
+        var event = event || window.event; // for IE
+        var target = event.target || event.srcElement;
+        angle = parseInt(target.value) / 10;
+        render();
+    };
+
+    document.getElementById("angle").oninput = function(event) {
+        var event = event || window.event; // for IE
+        var target = event.target || event.srcElement;
+        angle = parseInt(target.value) / 10;
+        render();
+    };
+
+    document.getElementById("filled").onchange = function(event) {
+        var event = event || window.event; // for IE
+        var target = event.target || event.srcElement;
+        filled = target.checked;
         render();
     };
 
