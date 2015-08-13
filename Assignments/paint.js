@@ -78,7 +78,7 @@ function handleMouseDown(event) {
     widths[numPolygons] = linewidth;
 }
 
-function handleMouseUp() {
+function handleMouseUp(event) {
     var coords = canvas.relMouseCoords(event);
     drawing = false;
 
@@ -91,7 +91,7 @@ function handleMouseUp() {
     render();
 }
 
-function handleMouseMove() {
+function handleMouseMove(event) {
     if (drawing) {
         var coords = canvas.relMouseCoords(event);
         addPoint(coords.x, coords.y);
