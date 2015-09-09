@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>Texture Sphere</title>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec3 vPosition;
+attribute vec3 vNormal;
+attribute vec2 vTexCoord;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform mat3 normalMatrix;
+
+uniform vec3 ambientColor;
+
+uniform vec3 vLightDir;
+uniform vec3 vDirColor;
+
+varying vec2 fTexCoord;
+varying vec3 fLightWeights;
+
+void main(void) {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.0);
+    fTexCoord = vTexCoord;
+
+    vec3 transformedNormal = normalMatrix * vNormal;
+    float directionalLightWeighting = max(dot(transformedNormal, vLightDir), 0.0);
+    fLightWeights = ambientColor + vDirColor * directionalLightWeighting;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+varying vec2 fTexCoord;
+varying vec3 fLightWeights;
+
+uniform sampler2D texture;
+
+void main(void) {
+    vec4 color = texture2D(texture, vec2(fTexCoord.s, fTexCoord.t));
+    gl_FragColor = vec4(color.rgb * fLightWeights, color.a);
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="texturesphere.js"></script>
+
+</head>
+
+<body onload="init();">
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<br/>
+Choose texture:
+<select id="texture">
+<option value="checkered">Checkered</option>
+<option value="earth">Earth</option>
+<option value="mars">Mars</option>
+</select>
+<br/>
+Rotate<br/>
+X:<input id="rotx" type="range" min="-180" max="180"/>
+Y:<input id="roty" type="range" min="-180" max="180"/>
+Z:<input id="rotz" type="range" min="-180" max="180"/>
+<br/><br/>
+Images from <a href="http://maps.jpl.nasa.gov">NASA</a>
+
+</body>
+</html>
