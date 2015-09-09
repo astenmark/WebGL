@@ -68,7 +68,7 @@ function initTexture(filename) {
     sphereTexture.image = new Image();
     sphereTexture.image.onload = function() { handleTexture(sphereTexture); }
     sphereTexture.image.src = filename;
-    handleTexture(sphereTexture);
+    //handleTexture(sphereTexture);
 }
 
 // Init sphere buffers
