@@ -30,6 +30,7 @@ var projMatrix = mat4();
 var rotationMatrix = mat4();
 
 var sphereTexture;
+var checkeredTexture, earthTexture, marsTexture;
 var sphereVertexPositionBuffer;
 var sphereVertexNormalBuffer;
 var sphereVertexTextureCoordBuffer;
@@ -49,7 +50,7 @@ function configureTexture(image) {
     gl.generateMipmap( gl.TEXTURE_2D );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
-    sphereTexture = texture;
+    return texture
 }
 
 function handleTexture(texture) {
@@ -59,16 +60,16 @@ function handleTexture(texture) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
     gl.generateMipmap(gl.TEXTURE_2D);
-    gl.bindTexture(gl.TEXTURE_2D, null);
+    //gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
 // set up a texture loaded from file
 function initTexture(filename) {
-    sphereTexture = gl.createTexture();
-    sphereTexture.image = new Image();
-    sphereTexture.image.onload = function() { handleTexture(sphereTexture); }
-    sphereTexture.image.src = filename;
-    handleTexture(sphereTexture);
+    var texture = gl.createTexture();
+    texture.image = new Image();
+    texture.image.onload = function() { handleTexture(texture); }
+    texture.image.src = filename;
+    return texture
 }
 
 // Init sphere buffers
@@ -145,11 +146,17 @@ function update_texture(event) {
     var texsel = document.getElementById("texture").value;
     console.log(texsel);
     if (texsel == "checkered") {
-        configureTexture(image2);
+        // configureTexture(image2);
+        gl.bindTexture(gl.TEXTURE_2D, checkeredTexture);
+        sphereTexture = checkeredTexture;
     } else if (texsel == "earth") {
-        initTexture("earth.jpg");
+        // initTexture("earth.jpg");
+        gl.bindTexture(gl.TEXTURE_2D, earthTexture);
+        sphereTexture = earthTexture;
     } else if (texsel == "mars") {
-        initTexture("mars.jpg");
+        // initTexture("mars.jpg");
+        gl.bindTexture(gl.TEXTURE_2D, marsTexture);
+        sphereTexture = marsTexture;
     }
     render();
 }
@@ -258,8 +265,11 @@ function init() {
     document.getElementById("rotz").oninput = update_rotation;
     document.getElementById("texture").onchange = update_texture;
 
-    // Init texture
-    configureTexture(image2);  // start with checkered texture
+    // Init textures
+    earthTexture = initTexture("earth.jpg");
+    marsTexture = initTexture("mars.jpg");
+    checkeredTexture = configureTexture(image2);
+    sphereTexture = checkeredTexture; // start with checkered texture
 
     // Render
     render();
